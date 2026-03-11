@@ -1,0 +1,7 @@
+# 不同步敏感文件
+openclaw.json
+*.bak
+*.bak.*
+
+# macOS
+.DS_Store

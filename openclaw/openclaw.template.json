@@ -1,0 +1,446 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.8",
+    "lastTouchedAt": "2026-03-11T00:56:18.967Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-11T00:22:53.772Z",
+    "lastRunVersion": "2026.3.8",
+    "lastRunCommand": "configure",
+    "lastRunMode": "local"
+  },
+  "browser": {
+    "profiles": {
+      "custom-relay": {
+        "cdpUrl": "http://127.0.0.1:18892",
+        "driver": "extension",
+        "color": "#7c3aed"
+      }
+    }
+  },
+  "auth": "***REDACTED***",
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "minimax": {
+        "baseUrl": "https://api.minimax.io/anthropic",
+        "api": "anthropic-messages",
+        "authHeader": "***REDACTED***",
+        "apiKey": "***REDACTED***",
+        "models": [
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.3,
+              "output": 1.2,
+              "cacheRead": 0.03,
+              "cacheWrite": 0.12
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "minimax-portal": {
+        "baseUrl": "https://api.minimax.io/anthropic",
+        "apiKey": "***REDACTED***",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "MiniMax-M2.1",
+            "name": "MiniMax M2.1",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [
+          "minimax/MiniMax-M2.5",
+          "openrouter/anthropic/claude-sonnet-4.6"
+        ]
+      },
+      "models": {
+        "openai-codex/gpt-5.4": {},
+        "minimax/MiniMax-M2.5": {},
+        "openrouter/anthropic/claude-sonnet-4.6": {}
+      },
+      "workspace": "/Users/wangdong/.openclaw/workspace",
+      "memorySearch": {
+        "enabled": true,
+        "provider": "local"
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "kuro",
+        "default": true,
+        "name": "效率虾",
+        "workspace": "/Users/wangdong/.openclaw/workspace/kuro",
+        "heartbeat": {
+          "every": "30m",
+          "target": "slack",
+          "to": "C0AJJ495FK3"
+        },
+        "identity": {
+          "name": "效率虾",
+          "emoji": "🦞"
+        }
+      },
+      {
+        "id": "architect",
+        "name": "架构虾",
+        "workspace": "/Users/wangdong/.openclaw/workspace/architect",
+        "heartbeat": {
+          "every": "0m"
+        },
+        "identity": {
+          "name": "架构虾",
+          "emoji": "🧬"
+        }
+      },
+      {
+        "id": "worker",
+        "name": "外包虾",
+        "workspace": "/Users/wangdong/.openclaw/workspace/worker",
+        "model": {
+          "primary": "minimax-portal/MiniMax-M2.5",
+          "fallbacks": [
+            "minimax/MiniMax-M2.5",
+            "openai-codex/gpt-5.3-codex",
+            "openai-codex/gpt-5.4"
+          ]
+        },
+        "heartbeat": {
+          "every": "15m",
+          "target": "slack",
+          "to": "C0ALHLW4Q72"
+        },
+        "identity": {
+          "name": "外包虾",
+          "emoji": "⚙️"
+        },
+        "tools": {
+          "alsoAllow": [
+            "lobster"
+          ]
+        }
+      },
+      {
+        "id": "brain",
+        "name": "管理虾",
+        "workspace": "/Users/wangdong/.openclaw/workspace/brain",
+        "heartbeat": {
+          "every": "30m",
+          "target": "slack",
+          "to": "C0AKBR92PL5"
+        },
+        "identity": {
+          "name": "管理虾",
+          "emoji": "🧠"
+        }
+      }
+    ]
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "apiKey": "***REDACTED***"
+      }
+    },
+    "agentToAgent": {
+      "enabled": true,
+      "allow": [
+        "architect",
+        "kuro",
+        "worker",
+        "brain"
+      ]
+    },
+    "fs": {
+      "workspaceOnly": false
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "kuro",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0AJJ495FK3"
+        }
+      }
+    },
+    {
+      "agentId": "architect",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0AJ4HRLHPS"
+        }
+      }
+    },
+    {
+      "agentId": "worker",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0ALHLW4Q72"
+        }
+      }
+    },
+    {
+      "agentId": "brain",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0AKBR92PL5"
+        }
+      }
+    }
+  ],
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "hooks": {
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "session-memory": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "channels": {
+    "slack": {
+      "mode": "socket",
+      "webhookPath": "/slack/events",
+      "enabled": true,
+      "botToken": "***REDACTED***",
+      "appToken": "***REDACTED***",
+      "userTokenReadOnly": "***REDACTED***",
+      "groupPolicy": "allowlist",
+      "streaming": "off",
+      "nativeStreaming": false,
+      "dmPolicy": "disabled",
+      "allowFrom": [
+        "C0AJJ495FK3",
+        "C0AJ4HRLHPS",
+        "C0ALHLW4Q72",
+        "C0AKBR92PL5"
+      ],
+      "dm": {
+        "enabled": true,
+        "allowFrom": []
+      },
+      "channels": {
+        "C0AJJ495FK3": {
+          "requireMention": false
+        },
+        "C0AJ4HRLHPS": {
+          "requireMention": false
+        },
+        "C0ALHLW4Q72": {
+          "requireMention": false
+        },
+        "C0AKBR92PL5": {
+          "requireMention": false
+        }
+      }
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "controlUi": {
+      "allowedOrigins": [
+        "http://127.0.0.1:18789",
+        "http://localhost:18789"
+      ]
+    },
+    "auth": "***REDACTED***",
+    "trustedProxies": [
+      "127.0.0.1/32",
+      "::1/128"
+    ],
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "nodes": {
+      "denyCommands": []
+    },
+    "remote": {
+      "url": "ws://127.0.0.1:18790",
+      "token": "***REDACTED***"
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    },
+    "entries": {
+      "nano-banana-pro": {
+        "apiKey": "***REDACTED***"
+      },
+      "sag": {
+        "apiKey": "***REDACTED***"
+      }
+    }
+  },
+  "plugins": {
+    "allow": [
+      "memory-lancedb-pro",
+      "slack",
+      "minimax-portal-auth",
+      "lobster"
+    ],
+    "slots": {
+      "memory": "memory-lancedb-pro"
+    },
+    "entries": {
+      "slack": {
+        "enabled": true
+      },
+      "minimax-portal-auth": {
+        "enabled": true
+      },
+      "thread-ownership": {
+        "enabled": true
+      },
+      "lobster": {
+        "enabled": true
+      },
+      "memory-lancedb-pro": {
+        "enabled": true,
+        "config": {
+          "embedding": {
+            "apiKey": "***REDACTED***",
+            "model": "jina-embeddings-v5-text-small",
+            "baseURL": "https://api.jina.ai/v1",
+            "dimensions": 1024,
+            "taskQuery": "retrieval.query",
+            "taskPassage": "retrieval.passage",
+            "normalized": true
+          },
+          "dbPath": "~/.openclaw/memory/lancedb-pro",
+          "autoCapture": true,
+          "autoRecall": true,
+          "retrieval": {
+            "mode": "hybrid",
+            "vectorWeight": 0.7,
+            "bm25Weight": 0.3,
+            "minScore": 0.3,
+            "rerank": "cross-encoder",
+            "rerankApiKey": "jina_8d4459b826ba44ddadf3f91358f695d8BMt7XDFaPReDYZDufQdQnNp5OZiC",
+            "rerankModel": "jina-reranker-v3",
+            "filterNoise": true,
+            "hardMinScore": 0.35,
+            "recencyHalfLifeDays": 14,
+            "recencyWeight": 0.1,
+            "timeDecayHalfLifeDays": 60
+          },
+          "enableManagementTools": false,
+          "scopes": {
+            "default": "global",
+            "definitions": {
+              "global": {
+                "description": "四虾共享知识池"
+              },
+              "agent:kuro": {
+                "description": "效率虾私有记忆"
+              },
+              "agent:brain": {
+                "description": "管理虾私有记忆"
+              },
+              "agent:architect": {
+                "description": "架构虾私有记忆"
+              },
+              "agent:worker": {
+                "description": "外包虾私有记忆"
+              }
+            },
+            "agentAccess": {
+              "kuro": [
+                "global",
+                "agent:kuro"
+              ],
+              "brain": [
+                "global",
+                "agent:brain"
+              ],
+              "architect": [
+                "global",
+                "agent:architect"
+              ],
+              "worker": [
+                "agent:worker"
+              ]
+            }
+          },
+          "sessionMemory": {
+            "enabled": false
+          }
+        }
+      }
+    }
+  }
+}
