@@ -49,6 +49,13 @@
 - LaunchAgent: `com.lobster-empire.vps-tunnel`（~/Library/LaunchAgents/）
 - **移动捕获**: Leon 发 `/log <内容>` → VPS 自动虾 → `workspace/auto/mobile-captures/YYYYMMDD.md` → kuro 归来处理
 
+## Git 备份仓库
+
+- 仓库: `https://github.com/changyoutaxiang/openclaw-parents`
+- 本地: `~/Projects/openclaw-parents/`
+- 同步命令: `cd ~/Projects/openclaw-parents && ./sync.sh`
+- 内容: claude 记忆 + openclaw workspace md + 脱敏配置模板
+
 ## 关键文件索引
 
 | 文件 | 用途 |
