@@ -27,6 +27,17 @@ fi
 chmod +x "$REPO_DIR/vps/sync.sh"
 chmod +x "$REPO_DIR/vps/setup.sh"
 
+# 2b. 初始化龙虾母亲身份
+echo "→ 初始化龙虾母亲身份..."
+CLAUDE_MD="$REPO_DIR/shared/claude/CLAUDE.md"
+if [ -f "$CLAUDE_MD" ]; then
+  mkdir -p /root/.claude
+  cp "$CLAUDE_MD" /root/.claude/CLAUDE.md
+  echo "   ✓ 已写入 /root/.claude/CLAUDE.md"
+else
+  echo "   ⚠ shared/claude/CLAUDE.md 不存在，请先在本地 Mac 运行一次 local/sync.sh"
+fi
+
 # 3. 检测 Claude 记忆目录
 echo "→ 检测 Claude 记忆目录..."
 MEMORY_DIR=$(find /root/.claude/projects -maxdepth 2 -name "MEMORY.md" 2>/dev/null | head -1 | xargs dirname 2>/dev/null || true)

@@ -24,8 +24,16 @@ git pull --rebase origin main 2>&1 | sed 's/^/   /'
 git stash pop --quiet 2>/dev/null || true
 
 # 1. 全局身份（shared，两端共用）
+# 方向：shared/ 是权威来源（由本地 Mac 维护），VPS 只读取/还原
 echo "→ 同步全局身份..."
-[ -f /root/.claude/CLAUDE.md ] && cp /root/.claude/CLAUDE.md "$SHARED_DIR/claude/CLAUDE.md"
+if [ -f "$SHARED_DIR/claude/CLAUDE.md" ]; then
+  mkdir -p /root/.claude
+  cp "$SHARED_DIR/claude/CLAUDE.md" /root/.claude/CLAUDE.md
+  echo "   ✓ 已还原 /root/.claude/CLAUDE.md"
+else
+  # 如果 shared 里还没有，则从本地上传一次（兜底）
+  [ -f /root/.claude/CLAUDE.md ] && cp /root/.claude/CLAUDE.md "$SHARED_DIR/claude/CLAUDE.md"
+fi
 
 # 2. Claude 记忆文件
 if [ -n "$CLAUDE_MEMORY_DIR" ] && [ -d "$CLAUDE_MEMORY_DIR" ]; then
