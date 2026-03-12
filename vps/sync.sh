@@ -19,7 +19,9 @@ echo "=== 龙虾母亲 [VPS 端] 同步开始 ==="
 # 0. 先拉取远端（双向同步关键步骤）
 echo "→ 拉取远端最新..."
 cd "$REPO_DIR"
+git stash --quiet 2>/dev/null || true
 git pull --rebase origin main 2>&1 | sed 's/^/   /'
+git stash pop --quiet 2>/dev/null || true
 
 # 1. 全局身份（shared，两端共用）
 echo "→ 同步全局身份..."
