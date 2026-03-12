@@ -53,7 +53,9 @@
 
 - 仓库: `https://github.com/changyoutaxiang/openclaw-parents`
 - 本地: `~/Projects/openclaw-parents/`
-- 同步命令: `cd ~/Projects/openclaw-parents && ./sync.sh`
+- 本地同步: `cd ~/Projects/openclaw-parents && ./local/sync.sh`
+- VPS 首次部署: `curl -fsSL .../vps/setup.sh | bash`，之后 `lobster-sync`
+- 自动 cron: 本地 23:30 CST / VPS 23:00 CST 每日同步
 - 内容: claude 记忆 + openclaw workspace md + 脱敏配置模板
 
 ## 关键文件索引
