@@ -11,7 +11,7 @@ SHARED_DIR="$REPO_DIR/shared"
 COMMIT_MSG="${1:-"vps: $(date '+%Y-%m-%d %H:%M')"}"
 
 # 路径配置（首次由 setup.sh 写入，或手动调整）
-CLAUDE_MEMORY_DIR="${CLAUDE_MEMORY_DIR:-$(find /root/.claude/projects -maxdepth 2 -name "MEMORY.md" 2>/dev/null | head -1 | xargs dirname 2>/dev/null)}"
+CLAUDE_MEMORY_DIR="${CLAUDE_MEMORY_DIR:-$(find /root/.claude/projects -maxdepth 3 -name "MEMORY.md" 2>/dev/null | head -1 | xargs -r dirname 2>/dev/null)}"
 OPENCLAW_WORKSPACE="/root/.openclaw/workspace"
 
 echo "=== 龙虾母亲 [VPS 端] 同步开始 ==="
@@ -48,6 +48,7 @@ fi
 
 # 3. OpenClaw workspace 根目录 md
 echo "→ 同步 workspace 根目录..."
+mkdir -p "$VPS_DIR/openclaw/workspace"
 for f in AGENTS.md HEARTBEAT.md IDENTITY.md MEMORY.md SOUL.md TOOLS.md USER.md; do
   src="$OPENCLAW_WORKSPACE/$f"
   [ -f "$src" ] && cp "$src" "$VPS_DIR/openclaw/workspace/$f"

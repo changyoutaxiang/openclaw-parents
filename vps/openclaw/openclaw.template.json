@@ -1,0 +1,425 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.8",
+    "lastTouchedAt": "2026-03-11T03:17:40.599Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-09T02:00:21.550Z",
+    "lastRunVersion": "2026.3.7",
+    "lastRunCommand": "configure",
+    "lastRunMode": "local"
+  },
+  "browser": {
+    "enabled": true,
+    "cdpUrl": "http://127.0.0.1:18800",
+    "headless": true,
+    "noSandbox": true,
+    "attachOnly": true
+  },
+  "auth": "***REDACTED***",
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "moonshot": {
+        "baseUrl": "https://api.moonshot.cn/v1",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "kimi-k2.5",
+            "name": "Kimi K2.5",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 256000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "minimax": {
+        "baseUrl": "https://api.minimax.io/anthropic",
+        "apiKey": "***REDACTED***",
+        "api": "anthropic-messages",
+        "authHeader": "***REDACTED***",
+        "models": [
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.3,
+              "output": 1.2,
+              "cacheRead": 0.03,
+              "cacheWrite": 0.12
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "minimax-portal": {
+        "baseUrl": "https://api.minimax.io/anthropic",
+        "apiKey": "***REDACTED***",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [
+          "minimax-portal/MiniMax-M2.5",
+          "minimax/MiniMax-M2.5",
+          "openrouter/anthropic/claude-sonnet-4.6"
+        ]
+      },
+      "models": {
+        "openrouter/anthropic/claude-sonnet-4.6": {},
+        "openai-codex/gpt-5.4": {},
+        "moonshot/kimi-k2.5": {
+          "alias": "Kimi"
+        },
+        "minimax/MiniMax-M2.5": {},
+        "minimax-portal/MiniMax-M2.5": {}
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "auto",
+        "default": true,
+        "name": "自动虾",
+        "workspace": "/root/.openclaw/workspace/auto",
+        "heartbeat": {
+          "every": "30m",
+          "target": "slack",
+          "to": "C0ALJRU4BQ8"
+        },
+        "identity": {
+          "name": "自动虾",
+          "emoji": "🤖"
+        }
+      },
+      {
+        "id": "health",
+        "name": "养生虾",
+        "workspace": "/root/.openclaw/workspace/health",
+        "heartbeat": {
+          "every": "30m",
+          "target": "slack",
+          "to": "C0AH3VCRWCR"
+        },
+        "identity": {
+          "name": "养生虾",
+          "emoji": "🌿"
+        }
+      },
+      {
+        "id": "intel",
+        "name": "情报虾",
+        "workspace": "/root/.openclaw/workspace/intel",
+        "model": {
+          "primary": "moonshot/kimi-k2.5",
+          "fallbacks": [
+            "openrouter/anthropic/claude-sonnet-4.6",
+            "openai-codex/gpt-5.4"
+          ]
+        },
+        "heartbeat": {
+          "every": "0m"
+        },
+        "identity": {
+          "name": "情报虾",
+          "emoji": "🔍"
+        }
+      },
+      {
+        "id": "code",
+        "name": "编程虾",
+        "workspace": "/root/.openclaw/workspace/code",
+        "heartbeat": {
+          "every": "0m"
+        },
+        "identity": {
+          "name": "编程虾",
+          "emoji": "💻"
+        }
+      }
+    ]
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "brave",
+        "apiKey": "***REDACTED***"
+      },
+      "fetch": {
+        "enabled": true
+      }
+    },
+    "agentToAgent": {
+      "enabled": true,
+      "allow": [
+        "auto",
+        "health",
+        "intel"
+      ]
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "auto",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0ALJRU4BQ8"
+        }
+      }
+    },
+    {
+      "agentId": "health",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0AH3VCRWCR"
+        }
+      }
+    },
+    {
+      "agentId": "intel",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0AJU7H2KQR"
+        }
+      }
+    },
+    {
+      "agentId": "code",
+      "match": {
+        "channel": "slack",
+        "peer": {
+          "kind": "channel",
+          "id": "C0AKS11FCT0"
+        }
+      }
+    }
+  ],
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "scope": "per-sender",
+    "dmScope": "per-channel-peer"
+  },
+  "channels": {
+    "slack": {
+      "mode": "socket",
+      "webhookPath": "/slack/events",
+      "enabled": true,
+      "botToken": "***REDACTED***",
+      "appToken": "***REDACTED***",
+      "userTokenReadOnly": "***REDACTED***",
+      "allowBots": false,
+      "groupPolicy": "open",
+      "streaming": "partial",
+      "nativeStreaming": true,
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "U076SA32UHF"
+      ],
+      "dm": {
+        "enabled": true
+      },
+      "channels": {
+        "C0ALJRU4BQ8": {
+          "requireMention": false
+        },
+        "C0AH3VCRWCR": {
+          "requireMention": false
+        },
+        "C0AJU7H2KQR": {
+          "requireMention": false
+        },
+        "C0AKS11FCT0": {
+          "requireMention": false
+        }
+      },
+      "accounts": {
+        "default": {
+          "mode": "socket",
+          "enabled": true,
+          "botToken": "***REDACTED***",
+          "appToken": "***REDACTED***",
+          "userTokenReadOnly": "***REDACTED***",
+          "groupPolicy": "open",
+          "streaming": "partial",
+          "nativeStreaming": true
+        }
+      }
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "dangerouslyAllowHostHeaderOriginFallback": true
+    },
+    "auth": "***REDACTED***",
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "pnpm"
+    }
+  },
+  "plugins": {
+    "allow": [
+      "memory-lancedb-pro",
+      "slack",
+      "minimax-portal-auth"
+    ],
+    "slots": {
+      "memory": "memory-lancedb-pro"
+    },
+    "entries": {
+      "whatsapp": {
+        "enabled": false
+      },
+      "feishu": {
+        "enabled": false
+      },
+      "discord": {
+        "enabled": false
+      },
+      "slack": {
+        "enabled": true
+      },
+      "minimax-portal-auth": {
+        "enabled": true
+      },
+      "memory-lancedb-pro": {
+        "enabled": true,
+        "config": {
+          "embedding": {
+            "apiKey": "***REDACTED***",
+            "model": "jina-embeddings-v5-text-small",
+            "baseURL": "https://api.jina.ai/v1",
+            "dimensions": 1024,
+            "taskQuery": "retrieval.query",
+            "taskPassage": "retrieval.passage",
+            "normalized": true
+          },
+          "dbPath": "~/.openclaw/memory/lancedb-pro",
+          "autoCapture": true,
+          "autoRecall": true,
+          "retrieval": {
+            "mode": "hybrid",
+            "vectorWeight": 0.7,
+            "bm25Weight": 0.3,
+            "minScore": 0.3,
+            "rerank": "cross-encoder",
+            "rerankApiKey": "jina_8d4459b826ba44ddadf3f91358f695d8BMt7XDFaPReDYZDufQdQnNp5OZiC",
+            "rerankModel": "jina-reranker-v3",
+            "filterNoise": true,
+            "hardMinScore": 0.35,
+            "recencyHalfLifeDays": 14,
+            "recencyWeight": 0.1,
+            "timeDecayHalfLifeDays": 60
+          },
+          "enableManagementTools": false,
+          "scopes": {
+            "default": "cloud-global",
+            "definitions": {
+              "cloud-global": {
+                "description": "云端四虾共享知识池"
+              },
+              "agent:auto": {
+                "description": "自动虾私有记忆"
+              },
+              "agent:health": {
+                "description": "养生虾私有记忆（健康数据，最高隔离）"
+              },
+              "agent:intel": {
+                "description": "情报虾私有记忆"
+              },
+              "agent:code": {
+                "description": "编程虾私有记忆"
+              }
+            },
+            "agentAccess": {
+              "auto": [
+                "cloud-global",
+                "agent:auto"
+              ],
+              "health": [
+                "agent:health"
+              ],
+              "intel": [
+                "cloud-global",
+                "agent:intel"
+              ],
+              "code": [
+                "cloud-global",
+                "agent:code"
+              ]
+            }
+          },
+          "sessionMemory": {
+            "enabled": false
+          }
+        }
+      }
+    }
+  }
+}
